@@ -2,15 +2,37 @@
 
 char *find_newline(char *str)
 {
-	static char *str2;
+	char *str2;
 	char *newline;
+	static char *temp;
 
-	if ((newline = ft_strchr(str, '\n')))
+	if ((newline = ft_strchr(temp, '\n')))
 	{
-		str2 = ft_substr(str, 0, newline - str);
+		str2 = ft_substr(temp, 0, newline - temp);
+		temp = ft_strjoin(newline + 1, str);
+	}
+	else if ((newline = ft_strchr(str, '\n')))
+	{
+		if (!temp)
+			str2 = ft_substr(str, 0, newline - str);
+		else
+			str2 = ft_strjoin(temp, ft_substr(str, 0, newline - str));
+		temp = newline + 1;
 	}
 	else
-		str2 = str;
+	{
+		if (!temp)
+			str2 = str;
+		else
+			str2 = ft_strjoin(temp, str);
+		newline = NULL;
+	}
+//		printf("\n---------");
+//		printf("\nstr: |%s\n", str);
+		printf("\nstr2: |%s\n", str2);
+//		printf("\nnewline: |%s\n", newline);
+//		printf("\ntemp: |%s\n", temp);
+//		printf("---------\n");
 	return (str2);
 }
 
@@ -19,13 +41,21 @@ int	get_next_line(int fd, char **line)
 	char buff[BUFFER_SIZE + 1];
 	int ret;
 
-	while ((ret = read(fd, buff, BUFFER_SIZE)))
+	ret = read(fd, buff, BUFFER_SIZE);
+	buff[ret] = '\0';
+	*line = find_newline(ft_strndup(buff, BUFFER_SIZE));
+	if (ret > 0 || **line)
 	{
-		buff[ret] = '\0';
-		*line = find_newline(ft_strndup(buff, BUFFER_SIZE));
-		printf("\nbuff:%s\n", buff);
+		return (1);
 	}
-	return (0);
+	else if (ret == 0)
+	{
+		return (0);
+	}
+	else
+	{
+		return (-1);
+	}
 }
 
 int main()
@@ -36,11 +66,8 @@ int main()
 
 	str = NULL;
 	fd = open("prout", O_RDONLY);
-	ret = get_next_line(fd, &str)
-	while (ret > 0);
-	if (ret == 0)
-		return (0);
-	if (ret > -1)
-		return (1);
+	ret = get_next_line(fd, &str);
+	while (ret > 0)
+		ret = get_next_line(fd, &str);
 	return (0);
 }

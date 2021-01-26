@@ -65,6 +65,8 @@ char	*ft_strchr(char *s, int c)
 	unsigned int	i;
 
 	char_c = (unsigned char)c;
+	if (!s)
+		return (NULL);
 	i = 0;
 	while (s[i])
 	{
