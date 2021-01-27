@@ -34,23 +34,14 @@ int	get_next_line(int fd, char **line)
 	char buff[BUFFER_SIZE + 1];
 	static char *temp;
 	char *str;
+	char *nl_str;
 	int ret;
 	static int i;
 
-	str = NULL;
 	printf("---------\n%d\n\n", i);
 	i += 1;
-	printf("temp: |%s|\n\n", temp);
-	if (!temp)
-	{
-		ret = read(fd, buff, BUFFER_SIZE);
-		buff[ret] = '\0';
-		printf("buff: |%s|\n\n", buff);
-		str = ft_substr(buff, 0, ret);
-		temp = save_remaining(str);
-		*line = find_newline(str);
-	}
-	else
+
+	if (temp)
 	{
 		if ((*line = find_newline(temp)))
 		{
@@ -62,16 +53,27 @@ int	get_next_line(int fd, char **line)
 			ret = read(fd, buff, BUFFER_SIZE);
 			buff[ret] = '\0';
 			str = ft_substr(buff, 0, ret);
-			if ((str = find_newline(str)))
+			if ((nl_str = find_newline(str)))
 			{
-				*line = ft_strjoin(temp, str);
+				*line = ft_strjoin(temp, nl_str);
+				temp = save_remaining(str);
 			}
 			else
 			{
 				*line = ft_strjoin(temp, str);
+				temp = NULL;
 			}
-			temp = save_remaining(str);
 		}
+	}
+	else
+	{
+		ret = read(fd, buff, BUFFER_SIZE);
+		buff[ret] = '\0';
+		str = ft_substr(buff, 0, ret);
+		if ((*line = find_newline(str)))
+			temp = save_remaining(str);
+		else
+			*line = str;
 	}
 	if (ret > 0)
 		return (1);
