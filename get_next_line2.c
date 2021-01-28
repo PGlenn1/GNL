@@ -1,32 +1,49 @@
 #include "get_next_line.h"
 
-char *find_newline(char *str)
+char *find_newline(char *str, char *temp)
 {
-	char *trimmed_str;
+	char *nl_str;
 	char *index;
-	
+
 	if (!str)
 		return (NULL);
+	printf("\nfind_newline called\nstr: |%s|\n", str);
 	index = ft_strchr(str, '\n');
 	if (index)
 	{
-		trimmed_str = ft_substr(str, 0, index - str);	
+		printf("!newline_found!\n");
+		nl_str = ft_substr(str, 0, index + 1 - str);
+		if (temp)
+			free (temp);
+		temp = ft_strdup(index + 1);
+		printf("NL found temp: |%s|\n", temp);
 	}
 	else
-		return (NULL);
-	return (trimmed_str);
+	{
+		printf("no newline found\n");
+		nl_str = NULL;
+	}
+	return (nl_str);
 }
 
-char *save_remaining(char *str)
+char *return_newline(char *str, char *temp, int fd, char *buff)
 {
-	char *remaining_str;
+	char *nl_str;
+	char *str_copy;
+	int ret;
 
+	printf("\nreturn newline called\n");
 	if (!str)
 		return (NULL);
-	remaining_str = ft_strchr(str, '\n');
-	if (remaining_str)
-		remaining_str += 1;
-	return (remaining_str);
+	while (!(nl_str = find_newline(str, temp)) && ret > 0)
+	{
+		ret = read(fd, buff, BUFFER_SIZE);
+		str_copy = ft_strndup(buff, ret);
+		str = ft_strjoin(str, str_copy);
+		free(str_copy);
+	}
+	return (nl_str);
+
 }
 
 int	get_next_line(int fd, char **line)
@@ -34,46 +51,24 @@ int	get_next_line(int fd, char **line)
 	char buff[BUFFER_SIZE + 1];
 	static char *temp;
 	char *str;
-	char *nl_str;
 	int ret;
 	static int i;
 
-	printf("---------\n%d\n\n", i);
+	printf("---------\n%d\n---------\n", i);
 	i += 1;
 
+	printf("\nGNL temp: |%s|\n", temp);
 	if (temp)
 	{
-		if ((*line = find_newline(temp)))
-		{
-			temp = save_remaining(temp);
-			ret = 1;
-		}
-		else
-		{
-			ret = read(fd, buff, BUFFER_SIZE);
-			buff[ret] = '\0';
-			str = ft_substr(buff, 0, ret);
-			if ((nl_str = find_newline(str)))
-			{
-				*line = ft_strjoin(temp, nl_str);
-				temp = save_remaining(str);
-			}
-			else
-			{
-				*line = ft_strjoin(temp, str);
-				temp = NULL;
-			}
-		}
+		*line = return_newline(temp, NULL, fd, buff);
+		//str = NULL;
+		ret = 1;
 	}
 	else
 	{
 		ret = read(fd, buff, BUFFER_SIZE);
-		buff[ret] = '\0';
-		str = ft_substr(buff, 0, ret);
-		if ((*line = find_newline(str)))
-			temp = save_remaining(str);
-		else
-			*line = str;
+		str = ft_strndup(buff, ret);
+		*line = return_newline(str, temp, fd, buff);
 	}
 	if (ret > 0)
 		return (1);
@@ -91,12 +86,9 @@ int main()
 
 	str = NULL;
 	fd = open("prout", O_RDONLY);
-	ret = get_next_line(fd, &str);
-	printf("*line: |%s|\n\n", str);
-	while (ret > 0)
+	while ((ret = get_next_line(fd, &str)))
 	{
-		ret = get_next_line(fd, &str);
-		printf("*line: |%s|\n\n", str);
+		printf("\n*line: |%s|\nret = %d\n\n", str, ret);
 	}
 	return (0);
 }

@@ -27,12 +27,6 @@ char *find_newline(char *str)
 			str2 = ft_strjoin(temp, str);
 		newline = NULL;
 	}
-//		printf("\n---------");
-//		printf("\nstr: |%s\n", str);
-		printf("\nstr2: |%s\n", str2);
-//		printf("\nnewline: |%s\n", newline);
-//		printf("\ntemp: |%s\n", temp);
-//		printf("---------\n");
 	return (str2);
 }
 
