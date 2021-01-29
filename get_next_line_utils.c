@@ -10,7 +10,7 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char	*ft_strcat(char *s1, char *s2)
+static char	*ft_strcat(char *s1, char *s2)
 {
 	int i;
 	int s1_len;
