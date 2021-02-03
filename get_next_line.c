@@ -54,6 +54,11 @@ int	get_line(int fd, char **temp, char **line)
 	return (ret);
 }
 
+make_tab()
+{
+	
+}
+
 
 int	get_next_line(int fd, char **line)
 {
