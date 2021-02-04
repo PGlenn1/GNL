@@ -6,7 +6,7 @@
 /*   By: gpiriou <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/04 11:23:00 by gpiriou           #+#    #+#             */
-/*   Updated: 2021/02/04 13:51:48 by gpiriou          ###   ########.fr       */
+/*   Updated: 2021/02/04 14:06:02 by gpiriou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct	s_list {
 
 int				get_next_line(int fd, char **line);
 int				ft_strlen(char *str);
+char			*ft_strcat(char *s1, char *s2);
 char			*ft_strjoin(char *s1, char *s2);
 char			*ft_strdup(char *s1);
 char			*ft_strndup(char *s1, int n);

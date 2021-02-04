@@ -6,7 +6,7 @@
 /*   By: gpiriou <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/04 11:23:07 by gpiriou           #+#    #+#             */
-/*   Updated: 2021/02/04 13:58:18 by gpiriou          ###   ########.fr       */
+/*   Updated: 2021/02/04 14:05:42 by gpiriou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int			ft_strlen(char *str)
 	return (i);
 }
 
-static char	*ft_strcat(char *s1, char *s2)
+char		*ft_strcat(char *s1, char *s2)
 {
 	int i;
 	int s1_len;
