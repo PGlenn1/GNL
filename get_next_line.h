@@ -12,11 +12,11 @@
 #define ARRAY_SIZE 1024
 #endif
 
-typedef struct fd_data_s
+typedef struct file_data_s
 {
     int fd;
     char *rem;
-} fd_data_t;
+} file_data_t;
 
 int ft_strchr(char *s, int c);
 char *ft_strjoin(char *s1, char *s2);
