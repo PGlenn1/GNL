@@ -34,7 +34,9 @@ unsigned int ft_strlen(char *str)
 {
     unsigned int i;
     i = 0;
-    while (str[i])
+    if (!str)
+        return (0);
+    while (str && str[i])
         i++;
     return (i);
 }
@@ -63,7 +65,10 @@ int ft_strchr(char *s, int c)
     // printf("c value:%d\n", c);
 
     if (!s)
+    {
+	    // printf("debug\n");
         return (0);
+    }
     i = 0;
     while (s && s[i])
     {
