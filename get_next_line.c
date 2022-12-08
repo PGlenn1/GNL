@@ -102,7 +102,7 @@ int main()
     int fd;
     char *line;
 
-    fd = open("text", O_RDONLY);
+    fd = open("text_files/text", O_RDONLY);
     if (fd < 0)
         return (1);
     line = get_next_line(fd);
