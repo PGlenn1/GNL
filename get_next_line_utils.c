@@ -65,7 +65,7 @@ int ft_strchr(char *s, int c)
 
     if (!s)
     {
-	    // printf("debug\n");
+        // printf("debug\n");
         return (0);
     }
     i = 0;
@@ -73,8 +73,8 @@ int ft_strchr(char *s, int c)
     {
         if (s[i] == (char)c)
         {
-            if (i == 0)
-                i = 1;
+            // if (i == 0)
+            //     i = 1;
             return (i);
         }
         i++;

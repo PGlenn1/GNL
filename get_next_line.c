@@ -1,75 +1,74 @@
 #include "get_next_line.h"
-char *get_line(char *str, char **save)
+char *trim_line(char **line, char **save)
 {
     int nl_index;
-    char *line;
     char *tmp;
 
-	tmp = NULL;
-    nl_index = ft_strchr(str, '\n');
+    tmp = NULL;
+    nl_index = ft_strchr(*line, '\n');
     if (nl_index)
     {
-        if (!*save)
-        {
-            line = ft_strndup(str, nl_index + 1);
-        }
-        else
-        {
-            printf("STR:|%s|\n", str);
-            printf("SAVE:|%s|\n", *save);
-            tmp = ft_strndup(str, nl_index + 1);
-            line = ft_strjoin(*save, tmp);
-            free(tmp);
-        }
-        *save = &str[nl_index + 1];
-        if (!**save)
-            *save = NULL;
+        tmp = *line;
+        *save = &(*line[nl_index + 1]);
+        *line = ft_strndup(*line, nl_index + 1);
+        free(tmp);
     }
-    else
-        line = ft_strndup(str, ft_strlen(str));
-    return (line);
-
+    return (*line);
 }
 
-char *find_newline(int fd)
+char *extract_line(char **line, char **save, char *buffer)
 {
-    char *line;
-    char buffer[BUFFER_SIZE + 1];
     char *tmp;
+
+    tmp = NULL;
+    if (!*line)
+    {
+        if (!*save)
+            *line = ft_strjoin(buffer, "");
+        else
+        {
+            tmp = *save;
+            *line = ft_strjoin(*save, buffer);
+            // free(*save);
+            *save = NULL;
+        }
+    }
+    else
+    {
+        tmp = *line;
+        *line = ft_strjoin(*line, buffer);
+        // free(tmp);
+    }
+    return (*line);
+}
+
+char *find_newline(int fd, char **line, char **save)
+{
+    char buffer[BUFFER_SIZE + 1];
     int ret;
 
-    line = NULL;
     ret = 1;
-    while (ret && !ft_strchr(line, '\n'))
+    while (ret && !ft_strchr(*line, '\n'))
     {
         ret = read(fd, buffer, BUFFER_SIZE);
         if (ret <= 0)
             return (NULL);
-        if (!line)
-            line = ft_strjoin(buffer, "");
-        else
-        {
-            tmp = line;
-            line = ft_strjoin(line, buffer);
-            free(tmp);
-        }
+        *line = extract_line(line, save, buffer);
     }
-    return (line);
+    *line = trim_line(line, save);
+    return (*line);
 }
 
 char *get_next_line(int fd)
 {
     char check_buffer[1];
     static char *save;
-    char **ptr;
     char *line;
 
     if (fd < 0 || read(fd, check_buffer, 0) < 0 || BUFFER_SIZE == 0)
         return (NULL);
     // printf("SAVE:%s\n", save);
-    ptr = &save;
-    line = find_newline(fd);
-    line = get_line(line, ptr);
+    line = find_newline(fd, &line, &save);
     return (line);
 }
 
