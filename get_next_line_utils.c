@@ -62,7 +62,6 @@ char *ft_strndup(char *s1, unsigned int n)
 int ft_strchr(char *s, int c)
 {
     unsigned int i;
-    // printf("c value:%d\n", c);
 
     if (!s)
     {

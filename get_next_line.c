@@ -1,25 +1,32 @@
 #include "get_next_line.h"
-char *get_line(char *str, char *save)
+char *get_line(char *str, char **save)
 {
-    int nl_index;   
+    int nl_index;
     char *line;
-    char *new_save;
     char *tmp;
 
-	printf("str:%s\n", str);
+	tmp = NULL;
     nl_index = ft_strchr(str, '\n');
-    tmp = NULL;
     if (nl_index)
     {
-        printf("test\n");
-        tmp = save;
-        ne
-        line = ft_strndup(save, ft_strchr(save, '\n'));
-        printf("debuuuuuuuuuuug\n");
-        save = &save[ft_strchr(save, '\n') + 1];
-        printf("save:%s\n", save);
-        free(tmp);
+        if (!*save)
+        {
+            line = ft_strndup(str, nl_index + 1);
+        }
+        else
+        {
+            printf("STR:|%s|\n", str);
+            printf("SAVE:|%s|\n", *save);
+            tmp = ft_strndup(str, nl_index + 1);
+            line = ft_strjoin(*save, tmp);
+            free(tmp);
+        }
+        *save = &str[nl_index + 1];
+        if (!**save)
+            *save = NULL;
     }
+    else
+        line = ft_strndup(str, ft_strlen(str));
     return (line);
 
 }
@@ -27,7 +34,7 @@ char *get_line(char *str, char *save)
 char *find_newline(int fd)
 {
     char *line;
-    static char buffer[BUFFER_SIZE + 1];
+    char buffer[BUFFER_SIZE + 1];
     char *tmp;
     int ret;
 
@@ -36,12 +43,10 @@ char *find_newline(int fd)
     while (ret && !ft_strchr(line, '\n'))
     {
         ret = read(fd, buffer, BUFFER_SIZE);
-        if (ret < 0)
+        if (ret <= 0)
             return (NULL);
         if (!line)
-        {
             line = ft_strjoin(buffer, "");
-        }
         else
         {
             tmp = line;
@@ -56,18 +61,15 @@ char *get_next_line(int fd)
 {
     char check_buffer[1];
     static char *save;
+    char **ptr;
     char *line;
 
     if (fd < 0 || read(fd, check_buffer, 0) < 0 || BUFFER_SIZE == 0)
         return (NULL);
-    line = NULL;
-    if (ft_strchr(save, '\n'))
-        return (get_line(save, save));
+    // printf("SAVE:%s\n", save);
+    ptr = &save;
     line = find_newline(fd);
-    if (ft_strchr(line, '\n'))
-    {
-        return (get_line(line, save));
-    }
+    line = get_line(line, ptr);
     return (line);
 }
 
@@ -80,10 +82,13 @@ int main()
     if (fd < 0)
         return (1);
     line = get_next_line(fd);
+    // int i = 0;
     while (line)
     {
-        printf("LINE %s\n", line);
+        printf("LINE:%s\n", line);
         line = get_next_line(fd);
+        // i++;
     }
+    // printf("\n\nEND LINES\n\n");
     return (0);
 }

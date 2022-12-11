@@ -5,18 +5,8 @@
 #include <strings.h>
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 2
+#define BUFFER_SIZE 3
 #endif
-
-#ifndef ARRAY_SIZE
-#define ARRAY_SIZE 1024
-#endif
-
-typedef struct file_data_s
-{
-    int fd;
-    char *rem;
-} file_data_t;
 
 int ft_strchr(char *s, int c);
 char *ft_strjoin(char *s1, char *s2);
