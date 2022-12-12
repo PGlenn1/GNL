@@ -33,10 +33,11 @@ char *ft_strjoin(char *s1, char *s2)
 unsigned int ft_strlen(char *str)
 {
     unsigned int i;
-    i = 0;
+
     if (!str)
         return (0);
-    while (str && str[i])
+    i = 0;
+    while (str[i])
         i++;
     return (i);
 }
@@ -64,19 +65,12 @@ int ft_strchr(char *s, int c)
     unsigned int i;
 
     if (!s)
-    {
-        // printf("debug\n");
         return (0);
-    }
     i = 0;
-    while (s && s[i])
+    while (s[i])
     {
         if (s[i] == (char)c)
-        {
-            // if (i == 0)
-            //     i = 1;
             return (i);
-        }
         i++;
     }
     return (0);

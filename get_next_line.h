@@ -5,7 +5,7 @@
 #include <strings.h>
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 3
+#define BUFFER_SIZE 9999
 #endif
 
 int ft_strchr(char *s, int c);
