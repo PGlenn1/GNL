@@ -1,26 +1,28 @@
 #include "get_next_line.h"
+
 char *trim_line(char *line, char **save)
 {
     int nl_index;
-    char *tmp;
+    char *line_tmp;
+    char *save_tmp;
 
-    printf("\nTRIM\n");
-    tmp = line;
+    line_tmp = line;
+    save_tmp = *save;
     nl_index = ft_strchr(*save, '\n');
     if (nl_index)
     {
-        *save = &line[nl_index + 1];
+        *save = ft_strndup(&(*save[nl_index + 1]), ft_strlen(&(*save[nl_index + 1])));
         line = ft_strndup(*save, nl_index + 1);
-        free(tmp);
+        free(save_tmp);
         return (line);
     }
     nl_index = ft_strchr(line, '\n');
-    if (nl_index)
+    if (nl_index || *line == '\n')
     {
-        tmp = line;
-        *save = &line[nl_index + 1];
+        *save = ft_strndup(&line[nl_index + 1], ft_strlen(&line[nl_index + 1]));
         line = ft_strndup(line, nl_index + 1);
-        free(tmp);
+        free(save_tmp);
+        free(line_tmp);
     }
     return (line);
 }
@@ -28,26 +30,16 @@ char *trim_line(char *line, char **save)
 char *extract_line(char *line, char *save, char *buffer)
 {
     char *line_tmp;
-    char *save_tmp;
 
     line_tmp = line;
-    save_tmp = save;
-    printf("\nEXTRACT\n");
     if (!line)
     {
         if (!save || !*save)
-        {
             line = ft_strjoin(buffer, "");
-            // printf("DEBUG: %p\n", line);
-            // printf("save:%s\n", save);
-        }
         else
         {
-            // printf("DEBUG: %p\n", line);
-            printf("save:%s\n", save);
             line = ft_strjoin(save, buffer);
             *save = 0;
-            // free(save_tmp);
         }
     }
     else
@@ -70,7 +62,6 @@ char *get_next_line(int fd)
         return (NULL);
     ret = 1;
     line = NULL;
-    printf("DEBUG SAVE:||||%s||||\n", save);
     while (ret > 0 && !ft_strchr(line, '\n'))
     {
         ret = read(fd, buffer, BUFFER_SIZE);
@@ -81,26 +72,35 @@ char *get_next_line(int fd)
     }
     line = trim_line(line, &save);
     if (!*line)
+    {
+        free(line);
         return (NULL);
+    }
     return (line);
 }
 
-int main()
-{
-    int fd;
-    char *line;
+// int main()
+// {
+//     int fd;
+//     char *line;
+//     char *tmp;
 
-    fd = open("text_files/text", O_RDONLY);
-    if (fd < 0)
-        return (1);
-    line = get_next_line(fd);
-    int i = 0;
-    while (line)
-    {
-        printf("\n\nLINE:|%s|\n\n", line);
-        line = get_next_line(fd);
-        i++;
-    }
-    printf("\n\nEND LINES\n\n");
-    return (0);
-}
+//     fd = open("gnlTester/files/multiple_nlx5", O_RDONLY);
+//     if (fd < 0)
+//         return (1);
+//     line = get_next_line(fd);
+//     tmp = line;
+//     int i = 0;
+//     while (line)
+//     {
+//         printf("\n\nLINE:|%s|\n\n", line);
+//         free(line);
+//         line = get_next_line(fd);
+//         i++;
+//     }
+
+//     printf("\n\nLINE:|%s|\n\n", line);
+//     free(line);
+//     printf("\n\nEND LINES\n\n");
+//     return (0);
+// }
