@@ -70,22 +70,22 @@ char *get_next_line(int fd)
     return (line);
 }
 
-int main()
-{
-    int fd;
-    char *line;
-
-    fd = open("text_files/text", O_RDONLY);
-    if (fd < 0)
-        return (1);
-    line = get_next_line(fd);
-    // int i = 0;
-    while (line)
-    {
-        printf("\n\nLINE:|%s|\n\n", line);
-        line = get_next_line(fd);
-        // i++;
-    }
-    // printf("\n\nEND LINES\n\n");
-    return (0);
-}
+// int main()
+// {
+// int fd;
+// char *line;
+//
+// fd = open("text_files/text", O_RDONLY);
+// if (fd < 0)
+// return (1);
+// line = get_next_line(fd);
+// int i = 0;
+// while (line)
+// {
+// printf("\n\nLINE:|%s|\n\n", line);
+// line = get_next_line(fd);
+// i++;
+// }
+// printf("\n\nEND LINES\n\n");
+// return (0);
+// }
