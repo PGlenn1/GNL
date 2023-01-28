@@ -8,6 +8,12 @@
 #define BUFFER_SIZE 42
 #endif
 
+typedef struct fd_data
+{
+	int fd;
+	char *save;
+} fd_data;
+
 int ft_strchr(char *s, int c);
 char *ft_strjoin(char *s1, char *s2);
 unsigned int ft_strlen(char *str);

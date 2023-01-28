@@ -64,14 +64,25 @@ int ft_strchr(char *s, int c)
 {
     unsigned int i;
 
+    // printf("HELP\n");
+    // printf("s:%p\n", s);
+    // printf("s:%s\n", s);
     if (!s)
+    {
+        // printf("ALLO\n");
         return (0);
+    }
+    // printf("PROUT\n");
     i = 0;
     while (s[i])
     {
+        // printf("TEST\n");
         if (s[i] == (char)c)
+        {
             return (i);
+        }
         i++;
     }
+    // printf("FESSE\n");
     return (0);
 }
