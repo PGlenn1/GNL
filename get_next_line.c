@@ -29,8 +29,6 @@ char *create_line(char **save, char *buffer)
     {
         if (*buffer)
             line = ft_strjoin(buffer, "");
-        if (!line)
-            return (NULL);
     }
     else
     {
