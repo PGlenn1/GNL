@@ -1,5 +1,30 @@
 #include "get_next_line.h"
 
+int find_fd(struct fd_data *fd_array, int fd)
+{
+    int i = 0;
+
+    if (fd < 0)
+        return (-1);
+    // printf("find fd:%d\n", fd);
+    // printf("fd_data:%d\n", fd_array[0].fd);
+    while (i < ARRAY_SIZE && fd_array[i].fd != fd)
+    {
+        if (fd_array[i].fd == 0)
+        {
+            fd_array[i].fd = fd;
+            // printf("find fd:%d\n", fd);
+            // printf("fd_data[%d]:%d\n", i, fd_array[i].fd);
+            // printf("i:%d\n", i);
+            return (i);
+        }
+        i++;
+    }
+    if (i == ARRAY_SIZE)
+        return (-1);
+    return (i);
+}
+
 char *find_nl(char *str, char **save)
 {
     char *str_tmp;
@@ -64,52 +89,65 @@ char *get_next_line(int fd)
     char buffer[BUFFER_SIZE + 1];
     char check_buffer[1];
     char *line;
-    static char *save;
+    static struct fd_data fd_array[ARRAY_SIZE];
+    int fd_index;
     int ret;
 
-    if (fd < 0 || read(fd, check_buffer, 0) < 0 || BUFFER_SIZE == 0)
+    fd_index = find_fd(fd_array, fd);
+    // printf("fd_index:%d\n", fd_index);
+    if (fd < 0 || fd_index < 0 || read(fd, check_buffer, 0) < 0 || BUFFER_SIZE == 0)
         return (NULL);
+    // printf("save[%d]:%s\n", fd_index, fd_array[fd_index].save);
     ret = 1;
     line = NULL;
-    if (ft_strchr(save, '\n'))
-        return (find_nl(save, &save));
+    if (ft_strchr(fd_array[fd_index].save, '\n'))
+        return (find_nl(fd_array[fd_index].save, &(fd_array[fd_index].save)));
     while (ret > 0 && !ft_strchr(line, '\n'))
     {
         ret = read(fd, buffer, BUFFER_SIZE);
         if (ret < 0)
             return (NULL);
         buffer[ret] = '\0';
-        line = join_line(line, &save, buffer);
+        line = join_line(line, &(fd_array[fd_index].save), buffer);
         if (!line)
             return (NULL);
     }
-    return (find_nl(line, &save));
+    return (find_nl(line, &(fd_array[fd_index].save)));
 }
 
 int main()
 {
     int fd;
+    int fd2;
     char *line;
+    char *line2;
     char *tmp;
 
-    // fd = open("gnlTester/files/multiple_nlx5", O_RDONLY);
     fd = open("text_files/text", O_RDONLY);
-    if (fd < 0)
+    fd2 = open("text_files/multi_fd", O_RDONLY);
+    // printf("fd:%d | fd2:%d\n", fd, fd2);
+    if (fd < 0 || fd2 < 0)
         return (1);
     line = get_next_line(fd);
+    printf("\n\nLINE1:|%s|\n\n", line);
+    line2 = get_next_line(fd2);
+    printf("\n\nLINE2:|%s|\n\n", line2);
     tmp = line;
     int i = 0;
-    while (line)
+    while (line || line2)
     {
-        // printf("\n\nLINE:|%p|\n\n", line);
-        printf("\n\nLINE:|%s|\n\n", line);
         free(line);
         line = get_next_line(fd);
+        printf("\n\nLINE:|%s|\n\n", line);
+        free(line2);
+        line2 = get_next_line(fd2);
+        printf("\n\nLINE2:|%s|\n\n", line2);
         i++;
     }
-
-    printf("\n\nLINE:|%s|\n\n", line);
+    // printf("\n\nLINE:|%s|\n\n", line);
+    // printf("\n\nLINE:|%s|\n\n", line2);
     free(line);
+    free(line2);
     // printf("\n\nEND LINES\n\n");
     return (0);
 }

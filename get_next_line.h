@@ -8,6 +8,10 @@
 #define BUFFER_SIZE 42
 #endif
 
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE 1024
+#endif
+
 typedef struct fd_data
 {
 	int fd;
