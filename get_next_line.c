@@ -33,12 +33,14 @@ char *find_nl(char *str, char **save)
         str = ft_strndup(tmp, index + 1);
         if (!str)
             return (NULL);
-        if (tmp[index + 1])
+        if (tmp[index + 1] || *tmp == '\n')
         {
             *save = ft_strndup(&tmp[index + 1], ft_strlen(&tmp[index + 1]));
             if (!*save)
                 return (NULL);
         }
+        else
+            *save = NULL;
         free(tmp);
     }
     return (str);
@@ -47,10 +49,8 @@ char *find_nl(char *str, char **save)
 char *create_line(char **save, char *buffer)
 {
     char *line;
-    char *save_tmp;
 
     line = NULL;
-    save_tmp = *save;
     if (!*save || !**save)
     {
         if (*buffer)
@@ -61,7 +61,6 @@ char *create_line(char **save, char *buffer)
         line = ft_strjoin(*save, buffer);
         if (!line)
             return (NULL);
-        **save = 0;
         free(*save);
         *save = NULL;
     }
@@ -70,17 +69,17 @@ char *create_line(char **save, char *buffer)
 
 char *join_line(char *line, char **save, char *buffer)
 {
-    char *line_tmp;
+    char *tmp;
 
-    line_tmp = line;
+    tmp = line;
     if (!line)
         line = create_line(save, buffer);
     else
     {
-        line = ft_strjoin(line_tmp, buffer);
+        line = ft_strjoin(tmp, buffer);
         if (!line)
             return (NULL);
-        free(line_tmp);
+        free(tmp);
     }
     return (line);
 }
