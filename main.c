@@ -12,13 +12,18 @@ int main()
     file_d[1] = open("gnlTester/files/42_with_nl", O_RDONLY);
     file_d[2] = open("gnlTester/files/43_with_nl", O_RDONLY);
 
-    // fd = open("gnlTester/files/multiple_nlx5", O_RDONLY);
-    // fd = open("gnlTester/files/multiple_line_no_nl", O_RDONLY);
-    fd = open("gnlTester/files/multiple_line_with_nl", O_RDONLY);
-    fd = open("gnlTester/files/big_line_with_nl", O_RDONLY);
+    // fd = open("gnlTester/files/nl", O_RDONLY);
+    // fd = open("gnlTester/files/41_with_nl", O_RDONLY);
+    // fd = open("gnlTester/files/42_with_nl", O_RDONLY);
+    // fd = open("gnlTester/files/43_with_nl", O_RDONLY);
 
-    // fd = open("gnlTester/files/alternate_line_nl_with_nl", O_RDONLY);
+    fd = open("gnlTester/files/multiple_nlx5", O_RDONLY);
+    // fd = open("gnlTester/files/multiple_line_no_nl", O_RDONLY);
+    // fd = open("gnlTester/files/multiple_line_with_nl", O_RDONLY);
+    // fd = open("gnlTester/files/big_line_with_nl", O_RDONLY);
+
     // fd = open("gnlTester/files/alternate_line_nl_no_nl", O_RDONLY);
+    // fd = open("gnlTester/files/alternate_line_nl_with_nl", O_RDONLY);
 
     // if (fd < 0)
     // {
