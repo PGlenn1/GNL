@@ -1,4 +1,4 @@
-#include "get_next_line_bonus.c"
+#include "get_next_line_bonus.h"
 
 int find_fd(struct fd_data *fd_array, int fd)
 {
