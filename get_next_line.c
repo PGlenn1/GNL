@@ -6,7 +6,7 @@
 /*   By: glpiriou <glpiriou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 20:25:03 by glpiriou          #+#    #+#             */
-/*   Updated: 2023/02/13 13:06:08 by glpiriou         ###   ########.fr       */
+/*   Updated: 2023/02/13 15:32:58 by glpiriou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,12 @@ char	*find_nl(char *str, char **save)
 			return (NULL);
 		if (tmp[index + 1] || *tmp == '\n')
 		{
-			*save = ft_strndup(&tmp[index + 1], ft_strlen(&tmp[index + 1]));
-			if (!*save)
-				return (NULL);
+			if (tmp[index + 1])
+			{
+				*save = ft_strndup(&tmp[index + 1], ft_strlen(&tmp[index + 1]));
+				if (!*save)
+					return (NULL);
+			}
 		}
 		else
 			*save = NULL;
@@ -68,7 +71,7 @@ char	*create_line(char **save, char *buffer)
 	if (!*save || !**save)
 	{
 		if (*buffer)
-			line = ft_strjoin(buffer, "");
+			line = ft_strndup(buffer, ft_strlen(buffer));
 	}
 	else
 	{

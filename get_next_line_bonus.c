@@ -1,146 +1,128 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glpiriou <glpiriou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/12 20:25:03 by glpiriou          #+#    #+#             */
+/*   Updated: 2023/02/13 15:36:02 by glpiriou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line_bonus.h"
 
-int find_fd(struct fd_data *fd_array, int fd)
+int	ffd(struct s_fd_data *ar, int fd)
 {
-    int i = 0;
+	int	i;
 
-    if (fd < 0)
-        return (-1);
-    while (i < ARRAY_SIZE && fd_array[i].fd != fd)
-    {
-        if (fd_array[i].fd == 0)
-        {
-            fd_array[i].fd = fd;
-            return (i);
-        }
-        i++;
-    }
-    if (i == ARRAY_SIZE)
-        return (-1);
-    return (i);
+	if (fd < 0)
+		return (-1);
+	if (fd == 0)
+		return (0);
+	i = 0;
+	while (i < ARRAY_SIZE && ar[i].fd != fd)
+	{
+		if (ar[i].fd == 0)
+		{
+			ar[i].fd = fd;
+			return (i);
+		}
+		i++;
+	}
+	if (i == ARRAY_SIZE)
+		return (-1);
+	return (i);
 }
 
-char *find_nl(char *str, char **save)
+char	*find_nl(char *str, char **save)
 {
-    char *str_tmp;
-    unsigned int nl_index;
+	char			*tmp;
+	unsigned int	index;
 
-    str_tmp = str;
-    nl_index = ft_strchr(str, '\n');
-    if (nl_index || *str == '\n')
-    {
-        str = ft_strndup(str_tmp, nl_index + 1);
-        if (!str)
-            return (NULL);
-        *save = ft_strndup(&str_tmp[nl_index + 1], ft_strlen(&str_tmp[nl_index + 1]));
-        if (!*save)
-            return (NULL);
-        free(str_tmp);
-    }
-    return (str);
+	tmp = str;
+	index = ft_strchr(str, '\n');
+	if (index || *str == '\n')
+	{
+		str = ft_strndup(tmp, index + 1);
+		if (!str)
+			return (NULL);
+		if (tmp[index + 1] || *tmp == '\n')
+		{
+			if (tmp[index + 1])
+			{
+				*save = ft_strndup(&tmp[index + 1], ft_strlen(&tmp[index + 1]));
+				if (!*save)
+					return (NULL);
+			}
+		}
+		else
+			*save = NULL;
+		free(tmp);
+	}
+	return (str);
 }
 
-char *create_line(char **save, char *buffer)
+char	*create_line(char **save, char *buffer)
 {
-    char *line;
+	char	*line;
 
-    line = NULL;
-    if (!*save || !**save)
-    {
-        if (*buffer)
-            line = ft_strjoin(buffer, "");
-    }
-    else
-    {
-        line = ft_strjoin(*save, buffer);
-        if (!line)
-            return (NULL);
-        **save = 0;
-        free(*save);
-        *save = NULL;
-    }
-    return (line);
+	line = NULL;
+	if (!*save || !**save)
+	{
+		if (*buffer)
+			line = ft_strndup(buffer, ft_strlen(buffer));
+	}
+	else
+	{
+		line = ft_strjoin(*save, buffer);
+		if (!line)
+			return (NULL);
+		free(*save);
+		*save = NULL;
+	}
+	return (line);
 }
 
-char *join_line(char *line, char **save, char *buffer)
+char	*join_line(char *line, char **save, char *buffer)
 {
-    char *line_tmp;
+	char	*tmp;
 
-    line_tmp = line;
-    if (!line)
-        line = create_line(save, buffer);
-    else
-    {
-        line = ft_strjoin(line_tmp, buffer);
-        if (!line)
-            return (NULL);
-        free(line_tmp);
-    }
-    return (line);
+	tmp = line;
+	if (!line)
+		line = create_line(save, buffer);
+	else
+	{
+		line = ft_strjoin(tmp, buffer);
+		if (!line)
+			return (NULL);
+		free(tmp);
+	}
+	return (line);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-    char buffer[BUFFER_SIZE + 1];
-    char check_buffer[1];
-    char *line;
-    static struct fd_data fd_array[ARRAY_SIZE];
-    int fd_index;
-    int ret;
+	char					buffer[BUFFER_SIZE + 1];
+	char					*line;
+	static struct s_fd_data	ar[ARRAY_SIZE];
+	int						ret;
 
-    fd_index = find_fd(fd_array, fd);
-    if (fd < 0 || fd_index < 0 || read(fd, check_buffer, 0) < 0 || BUFFER_SIZE == 0)
-        return (NULL);
-    ret = 1;
-    line = NULL;
-    if (ft_strchr(fd_array[fd_index].save, '\n'))
-        return (find_nl(fd_array[fd_index].save, &(fd_array[fd_index].save)));
-    while (ret > 0 && !ft_strchr(line, '\n'))
-    {
-        ret = read(fd, buffer, BUFFER_SIZE);
-        if (ret < 0)
-            return (NULL);
-        buffer[ret] = '\0';
-        line = join_line(line, &(fd_array[fd_index].save), buffer);
-        if (!line)
-            return (NULL);
-    }
-    return (find_nl(line, &(fd_array[fd_index].save)));
+	if (fd < 0 || ffd(ar, fd) < 0 || BUFFER_SIZE == 0)
+		return (NULL);
+	ret = 1;
+	line = NULL;
+	if (ft_strchr(ar[ffd(ar, fd)].save, '\n'))
+		return (find_nl(ar[ffd(ar, fd)].save, &(ar[ffd(ar, fd)].save)));
+	while (ret > 0 && !ft_strchr(line, '\n'))
+	{
+		ret = read(fd, buffer, BUFFER_SIZE);
+		if (ret < 0)
+			return (NULL);
+		buffer[ret] = '\0';
+		line = join_line(line, &(ar[ffd(ar, fd)].save), buffer);
+		if (!line)
+			return (NULL);
+	}
+	return (find_nl(line, &(ar[ffd(ar, fd)].save)));
 }
-
-// int main()
-// {
-//     int fd;
-//     int fd2;
-//     char *line;
-//     char *line2;
-//     char *tmp;
-
-//     fd = open("text_files/text", O_RDONLY);
-//     fd2 = open("text_files/multi_fd", O_RDONLY);
-//     // printf("fd:%d | fd2:%d\n", fd, fd2);
-//     if (fd < 0 || fd2 < 0)
-//         return (1);
-//     line = get_next_line(fd);
-//     printf("\n\nLINE1:|%s|\n\n", line);
-//     line2 = get_next_line(fd2);
-//     printf("\n\nLINE2:|%s|\n\n", line2);
-//     tmp = line;
-//     int i = 0;
-//     while (line || line2)
-//     {
-//         free(line);
-//         line = get_next_line(fd);
-//         printf("\n\nLINE:|%s|\n\n", line);
-//         free(line2);
-//         line2 = get_next_line(fd2);
-//         printf("\n\nLINE2:|%s|\n\n", line2);
-//         i++;
-//     }
-//     // printf("\n\nLINE:|%s|\n\n", line);
-//     // printf("\n\nLINE:|%s|\n\n", line2);
-//     free(line);
-//     free(line2);
-//     // printf("\n\nEND LINES\n\n");
-//     return (0);
-// }
