@@ -2,15 +2,15 @@
 
 int main()
 {
-    int file_d[4];
+    // int file_d[4];
     int fd;
     char *line;
     // fd = open("text_files/text", O_RDONLY);
 
-    file_d[3] = open("gnlTester/files/nl", O_RDONLY);
-    file_d[0] = open("gnlTester/files/41_with_nl", O_RDONLY);
-    file_d[1] = open("gnlTester/files/42_with_nl", O_RDONLY);
-    file_d[2] = open("gnlTester/files/43_with_nl", O_RDONLY);
+    // file_d[3] = open("gnlTester/files/nl", O_RDONLY);
+    // file_d[0] = open("gnlTester/files/41_with_nl", O_RDONLY);
+    // file_d[1] = open("gnlTester/files/42_with_nl", O_RDONLY);
+    // file_d[2] = open("gnlTester/files/43_with_nl", O_RDONLY);
 
     // fd = open("gnlTester/files/nl", O_RDONLY);
     // fd = open("gnlTester/files/41_with_nl", O_RDONLY);
