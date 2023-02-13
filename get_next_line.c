@@ -6,7 +6,7 @@
 /*   By: glpiriou <glpiriou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 20:25:03 by glpiriou          #+#    #+#             */
-/*   Updated: 2023/02/12 21:25:59 by glpiriou         ###   ########.fr       */
+/*   Updated: 2023/02/13 13:06:08 by glpiriou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,12 +101,11 @@ char	*join_line(char *line, char **save, char *buffer)
 char	*get_next_line(int fd)
 {
 	char					buffer[BUFFER_SIZE + 1];
-	char					check[1];
 	char					*line;
 	static struct s_fd_data	ar[ARRAY_SIZE];
 	int						ret;
 
-	if (fd < 0 || ffd(ar, fd) < 0 || read(fd, check, 0) < 0 || BUFFER_SIZE == 0)
+	if (fd < 0 || ffd(ar, fd) < 0 || BUFFER_SIZE == 0)
 		return (NULL);
 	ret = 1;
 	line = NULL;
